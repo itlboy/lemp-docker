@@ -61,6 +61,6 @@ services:
         options:
             max-size: 50m
 networks:
-    - frontend
-    - backend
+    frontend
+    backend
         
