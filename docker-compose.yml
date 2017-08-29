@@ -2,8 +2,8 @@ version: '2'
 services:
   web:
     image: nginx:alpine
-    links:
-      - php
+#    links:
+#      - php
     ports:
       - "80:80"
     volumes:
@@ -11,6 +11,8 @@ services:
     volumes_from:
       - php
     restart: always
+    networks:
+      - frontend 
     logging:
         driver: json-file
         options:
@@ -19,12 +21,15 @@ services:
     build: php-fpm-custom
     environment:
       - TYPO3_CONTEXT=Development/Docker
-    links:
-      - db
+#    links:
+#      - db
     #  - redis
     volumes:
       - ./htdocs:/var/www/html
       - ./php.ini:/usr/local/etc/php/conf.d/php.ini
+    networks:
+      - frontend
+      - backend
     restart: always
     logging:
         driver: json-file
@@ -45,7 +50,17 @@ services:
   myadmin:
     image: phpmyadmin/phpmyadmin
     restart: always
-    links:
-        - db:db
+#    links:
+#        - db:db
     ports:
         - 6996:80
+    networks:
+        - backend
+    logging:
+        driver: json-file
+        options:
+            max-size: 50m
+networks:
+    - frontend
+    - backend
+        
